@@ -5,7 +5,7 @@ function Employee(props) {
         <img
           className="object-cover rounded-full h-[100px] w-[100px] block mx-auto h-24 sm:mx-0 sm:flex-shrink-0"
           src={props.img}
-          alt="Person Porfile"
+          alt="Person Profile"
         />
         <div className="text-center space-y-2 sm:text-left">
           <div className="space-y-0.5">
