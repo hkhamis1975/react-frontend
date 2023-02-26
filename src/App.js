@@ -3,6 +3,7 @@ import Employee from "./components/Employee";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import AddEmployee from "./components/AddEmployee";
+import Header from "./components/Header";
 
 function App() {
   const [employees, setEmployees] = useState([
@@ -52,9 +53,10 @@ function App() {
     setEmployees(updatedEmployees);
   };
   return (
-    <div className="App">
+    <div className="App bg-blue-50 min-h-screen">
       <header className="App-header"></header>
-      <div className="App-body bg-blue-50 flex flex-wrap justify-center">
+      <Header />
+      <div className="App-body flex flex-wrap justify-center my-2">
         {employees.map((employee) => {
           return (
             <Employee
