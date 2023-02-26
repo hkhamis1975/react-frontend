@@ -2,6 +2,7 @@ import "./index.css";
 import Employee from "./components/Employee";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import AddEmployee from "./components/AddEmployee";
 
 function App() {
   const [employees, setEmployees] = useState([
@@ -31,20 +32,24 @@ function App() {
     },
   ]);
 
-  // const addEmployee = () => {
-  //   setEmployees([...employees, { name: "", role: "", img: "" }]);
-  // };
+  const addEmployee = (name, role, img) => {
+    const newEmployee = {
+      id: uuidv4(),
+      name: name,
+      role: role,
+      img: img,
+    };
+    setEmployees([...employees, newEmployee]);
+  };
   const updateEmployee = (id, name, role) => {
-    setEmployees(
-      employees.map((employee) => {
-        if (employee.id === id) {
-          employee.name = name;
-          employee.role = role;
-          // employee.img = img;
-        }
-        return employee;
-      })
-    );
+    const updatedEmployees = employees.map((employee) => {
+      if (id === employee.id) {
+        return { ...employee, name: name, role: role };
+      }
+
+      return employee;
+    });
+    setEmployees(updatedEmployees);
   };
   return (
     <div className="App">
@@ -63,6 +68,9 @@ function App() {
             />
           );
         })}
+      </div>
+      <div>
+        <AddEmployee addEmployee={addEmployee} />
       </div>
     </div>
   );
