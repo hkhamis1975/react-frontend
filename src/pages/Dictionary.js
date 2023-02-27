@@ -1,7 +1,9 @@
+import DefinitionSearch from "../components/DefinitionSearch";
+
 export default function Dictionary() {
   return (
-    <>
-      <h1> Hello Dictionary</h1>
-    </>
+    <div className="flex justify-center">
+      <DefinitionSearch />
+    </div>
   );
 }
