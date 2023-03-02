@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useNavigate } from "react";
 import { useParams } from "react-router-dom";
 import { baseUrl } from "../shared";
 
 export default function Customer() {
   const [customer, setCustomer] = useState();
   const { id } = useParams();
+  // const navigate = useNavigate();
+  const [notFound, setNotFound] = useState(false);
 
   //   const url = baseUrl + "api/token/refresh/";
   const url = baseUrl + "api/customers/" + id;
@@ -13,6 +15,10 @@ export default function Customer() {
     // console.log(url);
     fetch(url)
       .then((res) => {
+        if (res.status === 404) {
+          //render a 404 component in this page
+          setNotFound(true);
+        }
         // console.log(res.json());
         return res.json();
       })
@@ -25,7 +31,8 @@ export default function Customer() {
   //   console.log(customer ? customer.name : "customer undefined");
 
   return (
-    <>
+    <div className="p-3">
+      {notFound ? <p>The customer with id {id} was not found</p> : null}
       {customer ? (
         <div>
           <p>{customer.id}</p>
@@ -33,7 +40,7 @@ export default function Customer() {
           <p>{customer.industry}</p>
         </div>
       ) : null}
-    </>
+    </div>
     // <p>{customer.name}</p>
     //   <p>{customer.industry}</p>
   );
