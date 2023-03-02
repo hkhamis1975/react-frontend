@@ -1,4 +1,4 @@
-import { useEffect, useState, useNavigate } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { baseUrl } from "../shared";
 
@@ -9,9 +9,9 @@ export default function Customer() {
   const [notFound, setNotFound] = useState(false);
 
   //   const url = baseUrl + "api/token/refresh/";
-  const url = baseUrl + "api/customers/" + id;
 
   useEffect(() => {
+    const url = baseUrl + "api/customers/" + id;
     // console.log(url);
     fetch(url)
       .then((res) => {
@@ -26,7 +26,7 @@ export default function Customer() {
         setCustomer(data.customer);
         // console.log("api response: " + customer.customer.name);
       });
-  }, []);
+  }, [id]);
 
   //   console.log(customer ? customer.name : "customer undefined");
 

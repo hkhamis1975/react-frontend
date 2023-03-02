@@ -5,9 +5,8 @@ import { baseUrl } from "../shared";
 export default function Customers() {
   const [customers, setCustomers] = useState();
 
-  const url = baseUrl + "api/customers/";
-
   useEffect(() => {
+    const url = baseUrl + "api/customers/";
     fetch(url)
       .then((res) => {
         // console.log(res);
