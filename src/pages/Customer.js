@@ -1,34 +1,27 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { baseUrl } from "../shared";
 
 export default function Customer() {
   const [customer, setCustomer] = useState();
   const { id } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [notFound, setNotFound] = useState(false);
-
-  //   const url = baseUrl + "api/token/refresh/";
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
-    // console.log(url);
+
     fetch(url)
       .then((res) => {
         if (res.status === 404) {
-          //render a 404 component in this page
           setNotFound(true);
         }
-        // console.log(res.json());
         return res.json();
       })
       .then((data) => {
         setCustomer(data.customer);
-        // console.log("api response: " + customer.customer.name);
       });
   }, [id]);
-
-  //   console.log(customer ? customer.name : "customer undefined");
 
   return (
     <div className="p-3">
@@ -40,8 +33,24 @@ export default function Customer() {
           <p>{customer.industry}</p>
         </div>
       ) : null}
+      <div>
+        <button
+          className="bg-slate-800 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded"
+          onClick={(e) => {
+            const url = baseUrl + "api/customers/" + id;
+            fetch(url, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }).then((response) => {
+              navigate("/customers");
+            });
+          }}
+        >
+          Delete
+        </button>
+      </div>
     </div>
-    // <p>{customer.name}</p>
-    //   <p>{customer.industry}</p>
   );
 }

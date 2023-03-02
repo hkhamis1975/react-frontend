@@ -21,7 +21,7 @@ export default function Customers() {
   return (
     // <h1>Customers</h1>
 
-    <>
+    <div>
       <h1>Here are our customers:</h1>
       {customers
         ? customers.map((customer) => {
@@ -36,6 +36,6 @@ export default function Customers() {
             );
           })
         : null}
-    </>
+    </div>
   );
 }
