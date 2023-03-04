@@ -19,6 +19,7 @@ export default function Customers() {
         setCustomers(data.customers);
       });
   }, []);
+
   function newCustomer(name, industry) {
     const data = { name: name, industry: industry };
     const url = baseUrl + "api/customers/";

@@ -3,10 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { baseUrl } from "../shared";
 
 export default function Customer() {
-  const [customer, setCustomer] = useState();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [notFound, setNotFound] = useState(false);
+  const [customer, setCustomer] = useState();
+  const [tempCustomer, setTempCustomer] = useState();
+  const [notFound, setNotFound] = useState();
+  const [changed, setChanged] = useState(false);
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
@@ -20,17 +22,79 @@ export default function Customer() {
       })
       .then((data) => {
         setCustomer(data.customer);
+        setTempCustomer(data.customer);
       });
   }, [id]);
+
+  function updateCustomer() {
+    const url = baseUrl + "api/customers/" + id + "/";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tempCustomer),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setCustomer(data.customer);
+        setChanged(false);
+        console.log(data);
+      })
+      .catch();
+    navigate("/customers");
+  }
 
   return (
     <div className="p-3">
       {notFound ? <p>The customer with id {id} was not found</p> : null}
       {customer ? (
         <div>
-          <p>{customer.id}</p>
-          <p>{customer.name}</p>
-          <p>{customer.industry}</p>
+          <input
+            className="m-2 block px-2"
+            type="text"
+            value={tempCustomer.name}
+            onChange={(e) => {
+              setChanged(true);
+              setTempCustomer({
+                ...tempCustomer,
+                name: e.target.value,
+              });
+            }}
+          />
+          <input
+            className="m-2 block px-2"
+            type="text"
+            value={tempCustomer.industry}
+            onChange={(e) => {
+              setChanged(true);
+              setTempCustomer({
+                ...tempCustomer,
+                industry: e.target.value,
+              });
+            }}
+          />
+          {changed ? (
+            <>
+              <button
+                className="bg-slate-800 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded"
+                onClick={(e) => {
+                  setTempCustomer({ ...customer });
+                  setChanged(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-slate-800 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded"
+                onClick={updateCustomer}
+              >
+                Save
+              </button>
+            </>
+          ) : null}
         </div>
       ) : null}
       <div>
@@ -43,9 +107,16 @@ export default function Customer() {
               headers: {
                 "Content-Type": "application/json",
               },
-            }).then((response) => {
-              navigate("/customers");
-            });
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Something went wrong");
+                }
+                navigate("/customers");
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           }}
         >
           Delete
