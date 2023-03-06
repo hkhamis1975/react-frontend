@@ -11,6 +11,17 @@ export default function Customer() {
   const [changed, setChanged] = useState(false);
 
   useEffect(() => {
+    if (!customer) return;
+    if (!customer) return;
+
+    let equal = true;
+    if (customer.name !== tempCustomer.name) equal = false;
+    if (customer.industry !== tempCustomer.industry) equal = false;
+
+    if (equal) setChanged(false);
+  });
+
+  useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
 
     fetch(url)
