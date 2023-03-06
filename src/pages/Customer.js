@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { baseUrl } from "../shared";
 
 export default function Customer() {
@@ -45,7 +45,8 @@ export default function Customer() {
       });
   }, [id]);
 
-  function updateCustomer() {
+  function updateCustomer(e) {
+    e.preventDefault();
     const url = baseUrl + "api/customers/" + id + "/";
     fetch(url, {
       method: "POST",
@@ -75,30 +76,55 @@ export default function Customer() {
       {notFound ? <p>The customer with id {id} was not found</p> : null}
       {customer ? (
         <div>
-          <input
-            className="m-2 block px-2"
-            type="text"
-            value={tempCustomer.name}
-            onChange={(e) => {
-              setChanged(true);
-              setTempCustomer({
-                ...tempCustomer,
-                name: e.target.value,
-              });
-            }}
-          />
-          <input
-            className="m-2 block px-2"
-            type="text"
-            value={tempCustomer.industry}
-            onChange={(e) => {
-              setChanged(true);
-              setTempCustomer({
-                ...tempCustomer,
-                industry: e.target.value,
-              });
-            }}
-          />
+          <form
+            className="w-full max-w-sm"
+            id="customer"
+            onSubmit={updateCustomer}
+          >
+            <div className="md:flex md:items-center mb-6">
+              <div className="md:w-1/4">
+                <label htmlFor="name">Name</label>
+              </div>
+
+              <div className="md:w-3/4">
+                <input
+                  className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                  id="name"
+                  type="text"
+                  value={tempCustomer.name}
+                  onChange={(e) => {
+                    setChanged(true);
+                    setTempCustomer({
+                      ...tempCustomer,
+                      name: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="md:flex md:items-center mb-6">
+              <div className="md:w-1/4">
+                <label htmlFor="industry">Industry</label>
+              </div>
+
+              <div className="md:w-3/4">
+                <input
+                  id="industry"
+                  className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                  type="text"
+                  value={tempCustomer.industry}
+                  onChange={(e) => {
+                    setChanged(true);
+                    setTempCustomer({
+                      ...tempCustomer,
+                      industry: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+            </div>
+          </form>
           {changed ? (
             <>
               <button
@@ -147,6 +173,12 @@ export default function Customer() {
         </div>
       ) : null}
       {error ? <p>{error}</p> : null}
+      <br />
+      <Link to="/customers">
+        <button className="no-underline bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+          ← Go back
+        </button>
+      </Link>
     </div>
   );
 }
