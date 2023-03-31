@@ -25,7 +25,12 @@ export default function Customer() {
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
 
-    fetch(url)
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access"),
+      },
+    })
       .then((res) => {
         if (res.status === 401) {
           navigate("/login");
@@ -55,6 +60,7 @@ export default function Customer() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access"),
       },
       body: JSON.stringify(tempCustomer),
     })
@@ -157,6 +163,7 @@ export default function Customer() {
                   method: "DELETE",
                   headers: {
                     "Content-Type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("access"),
                   },
                 })
                   .then((response) => {
