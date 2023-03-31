@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { baseUrl } from "../shared";
 
 export default function Customer() {
@@ -10,6 +10,7 @@ export default function Customer() {
   const [notFound, setNotFound] = useState();
   const [changed, setChanged] = useState(false);
   const [error, setError] = useState();
+  const location = useLocation();
 
   useEffect(() => {
     if (!customer) return;
@@ -20,7 +21,8 @@ export default function Customer() {
     if (customer.industry !== tempCustomer.industry) equal = false;
 
     if (equal) setChanged(false);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const url = baseUrl + "api/customers/" + id;
@@ -33,7 +35,11 @@ export default function Customer() {
     })
       .then((res) => {
         if (res.status === 401) {
-          navigate("/login");
+          navigate("/login", {
+            state: {
+              previousUrl: location.pathname,
+            },
+          });
         }
         if (res.status === 404) {
           setNotFound(true);
@@ -51,7 +57,7 @@ export default function Customer() {
       .catch((e) => {
         setError(e.message);
       });
-  }, [id]);
+  }, [id, navigate, location]);
 
   function updateCustomer(e) {
     e.preventDefault();

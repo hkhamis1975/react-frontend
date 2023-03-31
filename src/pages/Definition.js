@@ -9,6 +9,9 @@ export default function Definition() {
   const [notFound, setNotFound] = useState(false);
   let { search } = useParams();
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   //   const {
   //     request,
   //     data: [{ meanings: word }] = [{}],
@@ -19,17 +22,26 @@ export default function Definition() {
 
   useEffect(() => {
     fetch(url)
-      .then((res) => {
-        if (res.status === 404) {
+      .then((response) => {
+        if (response.status === 404) {
           setNotFound(true);
+        } else if (response.status === 401) {
+          navigate("/login", {
+            state: {
+              previousUrl: location.pathname,
+            },
+          });
+        } else if (response.status === 500) {
+          //setServerError(true);
         }
-        return res.json();
+        return response.json();
       })
       .then((data) => {
         setWord(data[0].meanings);
         // console.log(data[0].meanings);
       });
-  }, [search]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, navigate]);
 
   if (notFound) {
     return (

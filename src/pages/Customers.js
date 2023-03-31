@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AddCustomer from "../components/AddCustomer";
 import { baseUrl } from "../shared";
 
@@ -7,6 +7,7 @@ export default function Customers() {
   const [customers, setCustomers] = useState();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   function toggleShow() {
     setShow(!show);
@@ -22,14 +23,19 @@ export default function Customers() {
     })
       .then((response) => {
         if (response.status === 401) {
-          navigate("/login");
+          navigate("/login", {
+            state: {
+              previousUrl: location.pathname,
+            },
+          });
         }
         return response.json();
       })
       .then((data) => {
         setCustomers(data.customers);
       });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
 
   function newCustomer(name, industry) {
     const data = { name: name, industry: industry };
