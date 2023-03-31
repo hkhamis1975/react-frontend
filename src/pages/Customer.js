@@ -27,6 +27,9 @@ export default function Customer() {
 
     fetch(url)
       .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+        }
         if (res.status === 404) {
           setNotFound(true);
         }
