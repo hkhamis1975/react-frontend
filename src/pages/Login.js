@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { baseUrl } from "../shared";
 import { useLocation, useNavigate } from "react-router-dom";
+import { LoginContext } from "../App";
 
 export default function Login() {
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
@@ -28,6 +30,7 @@ export default function Login() {
       .then((data) => {
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
+        setLoggedIn(true);
         navigate(
           location?.state?.previousUrl
             ? location.state.previousUrl
@@ -40,7 +43,7 @@ export default function Login() {
     <form className="m-2 w-full max-w-sm" id="customer" onSubmit={login}>
       <div className="md:flex md:items-center mb-6">
         <div className="md:w-1/4">
-          <label for="username">Username</label>
+          <label forhtml="username">Username</label>
         </div>
 
         <div className="md:w-3/4">
@@ -58,7 +61,7 @@ export default function Login() {
 
       <div className="md:flex md:items-center mb-6">
         <div className="md:w-1/4">
-          <label for="password">Password</label>
+          <label forhtml="password">Password</label>
         </div>
 
         <div className="md:w-3/4">

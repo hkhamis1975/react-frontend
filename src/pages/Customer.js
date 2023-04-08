@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { baseUrl } from "../shared";
+import { LoginContext } from "../App";
 
 export default function Customer() {
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState();
@@ -35,6 +37,7 @@ export default function Customer() {
     })
       .then((res) => {
         if (res.status === 401) {
+          setLoggedIn(false);
           navigate("/login", {
             state: {
               previousUrl: location.pathname,
@@ -71,6 +74,14 @@ export default function Customer() {
       body: JSON.stringify(tempCustomer),
     })
       .then((response) => {
+        if (response.status === 401) {
+          setLoggedIn(false);
+          navigate("/login", {
+            state: {
+              previousUrl: location.pathname,
+            },
+          });
+        }
         if (!response.ok) throw new Error("something went wrong");
         return response.json();
       })
@@ -173,6 +184,14 @@ export default function Customer() {
                   },
                 })
                   .then((response) => {
+                    if (response.status === 401) {
+                      setLoggedIn(false);
+                      navigate("/login", {
+                        state: {
+                          previousUrl: location.pathname,
+                        },
+                      });
+                    }
                     if (!response.ok) {
                       throw new Error("Something went wrong");
                     }
